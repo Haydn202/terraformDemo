@@ -8,7 +8,6 @@ on:
       - dev
     paths:
       - "infrastructure/**"
-      - ".github/workflows/deploy-infrastructure.yml"
 
 permissions:
   id-token: write
@@ -18,21 +17,21 @@ concurrency:
   group: terraform-infrastructure
   cancel-in-progress: false
 
-env:
-  TF_IN_AUTOMATION: true
-  ARM_USE_OIDC: true
-  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-  TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
-  TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
-
 jobs:
   terraform-plan-dev:
     name: Terraform plan (dev)
     runs-on: ubuntu-latest
+    environment: dev
+    env:
+      TF_IN_AUTOMATION: true
+      ARM_USE_OIDC: true
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+      TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
+      TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
     defaults:
       run:
         working-directory: infrastructure
@@ -67,6 +66,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: terraform-plan-dev
     environment: dev
+    env:
+      TF_IN_AUTOMATION: true
+      ARM_USE_OIDC: true
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+      TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
+      TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
     defaults:
       run:
         working-directory: infrastructure
@@ -100,6 +109,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: terraform-apply-dev
     if: github.ref == 'refs/heads/main'
+    environment: dev
+    env:
+      TF_IN_AUTOMATION: true
+      ARM_USE_OIDC: true
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+      TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
+      TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
     defaults:
       run:
         working-directory: infrastructure
@@ -135,6 +155,16 @@ jobs:
     needs: terraform-plan-prod
     if: github.ref == 'refs/heads/main'
     environment: production
+    env:
+      TF_IN_AUTOMATION: true
+      ARM_USE_OIDC: true
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+      TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
+      TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
     defaults:
       run:
         working-directory: infrastructure
