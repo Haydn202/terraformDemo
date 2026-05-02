@@ -4,7 +4,7 @@ document.querySelector(".waitlist")?.addEventListener("submit", (e) => {
   const email = input?.value?.trim();
   if (email) {
     alert(
-      "Thanks — our agents will notify your agents when a coach is available. (Demo: no backend wired.)"
+      "Thanks — our agents will notify your agents when a coach is available."
     );
     input.value = "";
   }
