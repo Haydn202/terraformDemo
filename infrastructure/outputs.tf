@@ -16,5 +16,5 @@ output "key_vault_name" {
 
 output "swa_token_secret_name" {
   description = "Key Vault secret name containing the deployment token for this environment."
-  value       = "AZURE_STATIC_WEB_APPS_API_TOKEN_${var.environment}"
+  value       = "SWA-TOKEN-${var.environment}"
 }

@@ -1,14 +1,3 @@
-# Deploy tokens live in Azure Key Vault (written by Terraform from the Static Web App api_key).
-#
-# GitHub setup (one-time):
-# 1. Entra ID App Registration for GitHub OIDC + federated credential:
-#    https://learn.microsoft.com/azure/developer/github/connect-from-azure
-#    Subject: repo:ORG/REPO:ref:refs/heads/main (and refs/heads/dev if you deploy from dev branch)
-# 2. Repository secrets: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID (the OIDC app)
-# 3. Repository variables: KEYVAULT_NAME_DEV, KEYVAULT_NAME_PROD (terraform output key_vault_name per env)
-# 4. Terraform: set github_actions_sp_object_id to that app's service principal object ID, re-apply so
-#    Key Vault access policy grants Get/List on the deployment-token secrets.
-
 name: Deploy Static Web App
 
 on:
@@ -29,6 +18,7 @@ jobs:
   deploy_dev:
     name: Deploy to dev
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,7 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "${VAULT_NAME:-}" ]; then
-            echo "::error::Repository variable KEYVAULT_NAME_DEV is not set (terraform output key_vault_name from dev apply)."
+            echo "::error::KEYVAULT_NAME_DEV is not set. Add it as a repository variable or on the 'dev' environment."
             exit 1
           fi
           TOKEN=$(az keyvault secret show \
