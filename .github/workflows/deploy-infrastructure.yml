@@ -74,8 +74,8 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-      TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
-      TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
+      TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID || secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
+      TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID || secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
     defaults:
       run:
         working-directory: infrastructure
@@ -118,14 +118,21 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-      TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
-      TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
+      TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID || secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
+      TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID || secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
     defaults:
       run:
         working-directory: infrastructure
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -134,6 +141,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform init
+        timeout-minutes: 15
         run: terraform init -input=false
 
       - name: Select workspace prod
@@ -149,12 +157,23 @@ jobs:
           path: infrastructure/tfplan
           if-no-files-found: error
 
-  terraform-apply-prod:
-    name: Terraform apply (prod)
+  terraform-gate-prod:
+    name: Approve prod apply
     runs-on: ubuntu-latest
     needs: terraform-plan-prod
     if: github.ref == 'refs/heads/main'
     environment: production
+    steps:
+      - name: Acknowledge
+        run: echo "Production approved; Terraform apply runs in the next job."
+
+  terraform-apply-prod:
+    name: Terraform apply (prod)
+    runs-on: ubuntu-latest
+    needs: terraform-gate-prod
+    if: github.ref == 'refs/heads/main'
+    environment: dev
+    timeout-minutes: 45
     env:
       TF_IN_AUTOMATION: true
       ARM_USE_OIDC: true
@@ -163,14 +182,21 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-      TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
-      TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
+      TF_VAR_service_principal_object_id: ${{ secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID || secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID }}
+      TF_VAR_github_actions_sp_object_id: ${{ secrets.AZURE_GITHUB_ACTIONS_SP_OBJECT_ID || secrets.AZURE_SERVICE_PRINCIPAL_OBJECT_ID }}
     defaults:
       run:
         working-directory: infrastructure
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -185,6 +211,7 @@ jobs:
           path: infrastructure
 
       - name: Terraform init
+        timeout-minutes: 15
         run: terraform init -input=false
 
       - name: Select workspace prod

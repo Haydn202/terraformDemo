@@ -29,6 +29,14 @@ variable "tenant_id" {
 variable "service_principal_object_id" {
   sensitive = true
   type      = string
+
+  validation {
+    condition = (
+      length(trimspace(var.service_principal_object_id)) > 0 &&
+      can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", trimspace(var.service_principal_object_id)))
+    )
+    error_message = "service_principal_object_id must be a non-empty Entra object ID (UUID), not the application (client) ID. In GitHub Actions set AZURE_SERVICE_PRINCIPAL_OBJECT_ID and/or AZURE_GITHUB_ACTIONS_SP_OBJECT_ID to the Terraform/OIDC app registration object ID."
+  }
 }
 
 variable "github_actions_sp_object_id" {
