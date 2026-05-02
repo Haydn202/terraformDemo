@@ -30,3 +30,9 @@ variable "service_principal_object_id" {
   sensitive = true
   type      = string
 }
+
+variable "github_actions_sp_object_id" {
+  type        = string
+  default     = ""
+  description = "Object ID of the Entra ID app used by GitHub OIDC (federated credential). Granted Key Vault secret Get/List. Set after creating the federated credential, then re-apply."
+}

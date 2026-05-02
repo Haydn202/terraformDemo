@@ -18,13 +18,17 @@ module "staticwebapp" {
 }
 
 module "keyvault" {
-  source              = "./modules/keyvault"
-  app_name            = var.app_name
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  tenant_id           = var.tenant_id
-  sp_object_id        = var.service_principal_object_id
-  secrets             = {
-    "AZURE_STATIC_WEB_APPS_API_TOKEN_${var.environment}" = module.staticwebapp.api_key
-  }
+  source                      = "./modules/keyvault"
+  app_name                    = var.app_name
+  resource_group_name         = var.resource_group_name
+  location                    = var.location
+  tenant_id                   = var.tenant_id
+  sp_object_id                = var.service_principal_object_id
+  github_actions_sp_object_id = var.github_actions_sp_object_id
+  environment                 = var.environment
+  swa_deployment_token        = module.staticwebapp.api_key
+
+  depends_on = [
+    module.staticwebapp
+  ]
 }

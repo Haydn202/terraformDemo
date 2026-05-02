@@ -1,3 +1,14 @@
+# Deploy tokens live in Azure Key Vault (written by Terraform from the Static Web App api_key).
+#
+# GitHub setup (one-time):
+# 1. Entra ID App Registration for GitHub OIDC + federated credential:
+#    https://learn.microsoft.com/azure/developer/github/connect-from-azure
+#    Subject: repo:ORG/REPO:ref:refs/heads/main (and refs/heads/dev if you deploy from dev branch)
+# 2. Repository secrets: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID (the OIDC app)
+# 3. Repository variables: KEYVAULT_NAME_DEV, KEYVAULT_NAME_PROD (terraform output key_vault_name per env)
+# 4. Terraform: set github_actions_sp_object_id to that app's service principal object ID, re-apply so
+#    Key Vault access policy grants Get/List on the deployment-token secrets.
+
 name: Deploy Static Web App
 
 on:
@@ -5,6 +16,10 @@ on:
     branches:
       - main
       - dev
+
+permissions:
+  id-token: write
+  contents: read
 
 concurrency:
   group: deploy-${{ github.ref }}
@@ -18,10 +33,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Load SWA deployment token from Key Vault
+        env:
+          VAULT_NAME: ${{ vars.KEYVAULT_NAME_DEV }}
+        run: |
+          set -euo pipefail
+          if [ -z "${VAULT_NAME:-}" ]; then
+            echo "::error::Repository variable KEYVAULT_NAME_DEV is not set (terraform output key_vault_name from dev apply)."
+            exit 1
+          fi
+          TOKEN=$(az keyvault secret show \
+            --vault-name "$VAULT_NAME" \
+            --name "SWA-TOKEN-dev" \
+            --query value -o tsv)
+          echo "::add-mask::$TOKEN"
+          echo "SWA_DEPLOYMENT_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+
       - name: Deploy to Azure Static Web Apps (dev)
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DEV }}
+          azure_static_web_apps_api_token: ${{ env.SWA_DEPLOYMENT_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           app_location: website
@@ -39,10 +77,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Load SWA deployment token from Key Vault
+        env:
+          VAULT_NAME: ${{ vars.KEYVAULT_NAME_PROD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${VAULT_NAME:-}" ]; then
+            echo "::error::Repository variable KEYVAULT_NAME_PROD is not set (terraform output key_vault_name from prod apply)."
+            exit 1
+          fi
+          TOKEN=$(az keyvault secret show \
+            --vault-name "$VAULT_NAME" \
+            --name "SWA-TOKEN-prod" \
+            --query value -o tsv)
+          echo "::add-mask::$TOKEN"
+          echo "SWA_DEPLOYMENT_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+
       - name: Deploy to Azure Static Web Apps (prod)
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static_web_apps_api_token: ${{ env.SWA_DEPLOYMENT_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           app_location: website
