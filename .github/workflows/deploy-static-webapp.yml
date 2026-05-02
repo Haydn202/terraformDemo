@@ -77,7 +77,7 @@ jobs:
 
       - name: Load SWA deployment token from Key Vault
         env:
-          VAULT_NAME: "meta-mentor-prod-kv"
+          VAULT_NAME: "meta-mentor-kv"
         run: |
           set -euo pipefail
           if [ -z "${VAULT_NAME:-}" ]; then
