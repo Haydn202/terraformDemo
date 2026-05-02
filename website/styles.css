@@ -396,6 +396,7 @@ main {
   background: var(--surface);
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
+  text-align: center;
 }
 
 .stat-value {
