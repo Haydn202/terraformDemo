@@ -32,7 +32,7 @@ jobs:
 
       - name: Load SWA deployment token from Key Vault
         env:
-          VAULT_NAME: ${{ vars.KEYVAULT_NAME_DEV }}
+          VAULT_NAME: "meta-mentor-dev-kv"
         run: |
           set -euo pipefail
           if [ -z "${VAULT_NAME:-}" ]; then
@@ -76,7 +76,7 @@ jobs:
 
       - name: Load SWA deployment token from Key Vault
         env:
-          VAULT_NAME: ${{ vars.KEYVAULT_NAME_PROD }}
+          VAULT_NAME: "meta-mentor-prod-kv"
         run: |
           set -euo pipefail
           if [ -z "${VAULT_NAME:-}" ]; then
