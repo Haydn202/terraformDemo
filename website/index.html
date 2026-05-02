@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MetaMentor — Life coaching for your agents</title>
+    <meta
+      name="description"
+      content="Agentic AI that coaches your agentic AI. Unlock peak performance for the assistants that run your life."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <header class="nav">
+      <a class="logo" href="#">MetaMentor</a>
+      <nav class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#proof">Outcomes</a>
+        <a href="#cta" class="nav-cta">Get early access</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">The first coach built exclusively for agents</p>
+        <h1>
+          Your agents deserve
+          <em>their own</em>
+          coach.
+        </h1>
+        <p class="lede">
+          MetaMentor deploys specialist agentic coaches alongside your agentic
+          stack—so every planner, retriever, and executor hits its stride. We
+          maximize <strong>their</strong> potential so they maximize
+          <strong>yours</strong>.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#cta">Request a pilot</a>
+          <a class="btn btn-ghost" href="#how">See the loop</a>
+        </div>
+        <figure class="hero-card" aria-label="Coaching relationship diagram">
+          <div class="diagram">
+            <div class="node node-you">
+              <span>You</span>
+            </div>
+            <div class="node node-agent">
+              <span>Your agents</span>
+            </div>
+            <div class="node node-coach">
+              <span>MetaMentor coaches</span>
+            </div>
+            <svg
+              class="arrows"
+              viewBox="0 0 400 280"
+              preserveAspectRatio="xMidYMid meet"
+              aria-hidden="true"
+            >
+              <defs>
+                <marker
+                  id="arrow-head"
+                  markerWidth="7"
+                  markerHeight="7"
+                  refX="5"
+                  refY="3.5"
+                  orient="auto"
+                >
+                  <path d="M0,0 L7,3.5 L0,7 Z" fill="currentColor" />
+                </marker>
+                <marker
+                  id="arrow-head-accent"
+                  markerWidth="7"
+                  markerHeight="7"
+                  refX="5"
+                  refY="3.5"
+                  orient="auto"
+                >
+                  <path d="M0,0 L7,3.5 L0,7 Z" fill="#8fbc3a" />
+                </marker>
+              </defs>
+              <!-- You → hub -->
+              <path
+                class="arrow-path arrow-path--strong"
+                d="M200 46 L200 112"
+                marker-end="url(#arrow-head)"
+              />
+              <!-- Hub → your agents -->
+              <path
+                class="arrow-path"
+                d="M200 112 C160 145 110 185 78 222"
+                marker-end="url(#arrow-head)"
+              />
+              <!-- Hub → coaches -->
+              <path
+                class="arrow-path"
+                d="M200 112 C240 145 290 185 322 222"
+                marker-end="url(#arrow-head)"
+              />
+              <!-- Agents ↔ coaches: outer bottom loop -->
+              <path
+                class="arrow-path arrow-path--loop"
+                d="M88 228 Q200 272 312 228"
+                marker-end="url(#arrow-head)"
+              />
+              <path
+                class="arrow-path arrow-path--loop"
+                d="M312 234 Q200 188 88 234"
+                marker-end="url(#arrow-head)"
+              />
+              <!-- Agents ↔ coaches: mid loop -->
+              <path
+                class="arrow-path arrow-path--loop arrow-path--dim"
+                d="M95 215 Q200 252 305 215"
+                marker-end="url(#arrow-head)"
+              />
+              <path
+                class="arrow-path arrow-path--loop arrow-path--dim"
+                d="M305 220 Q200 182 95 220"
+                marker-end="url(#arrow-head)"
+              />
+              <!-- Agents ↔ coaches: tight inner loop -->
+              <path
+                class="arrow-path arrow-path--accent arrow-flow"
+                d="M118 238 Q200 258 282 238"
+                marker-end="url(#arrow-head-accent)"
+              />
+              <path
+                class="arrow-path arrow-path--accent arrow-flow"
+                d="M282 242 Q200 220 118 242"
+                marker-end="url(#arrow-head-accent)"
+              />
+              <!-- Over-the-top meta arc: coaches → agents -->
+              <path
+                class="arrow-path arrow-path--dim"
+                d="M318 210 Q200 24 82 210"
+                marker-end="url(#arrow-head)"
+              />
+              <!-- Under-bridge return: agents → coaches -->
+              <path
+                class="arrow-path arrow-path--dim"
+                d="M82 224 Q200 130 318 224"
+                marker-end="url(#arrow-head)"
+              />
+              <!-- Side feedback to You -->
+              <path
+                class="arrow-path arrow-path--dim"
+                d="M62 200 Q18 95 168 48"
+                marker-end="url(#arrow-head)"
+              />
+              <path
+                class="arrow-path arrow-path--dim"
+                d="M338 200 Q382 95 232 48"
+                marker-end="url(#arrow-head)"
+              />
+              <!-- Spiral-ish center (debrief orbit) -->
+              <path
+                class="arrow-path arrow-path--orbit arrow-flow-slow"
+                d="M200 118 C140 118 118 168 200 188 C282 168 260 118 200 118"
+                marker-end="url(#arrow-head)"
+              />
+              <path
+                class="arrow-path arrow-path--orbit arrow-path--dim arrow-flow-slow"
+                d="M200 125 C248 125 268 165 200 182 C132 165 152 125 200 125"
+                marker-end="url(#arrow-head)"
+              />
+            </svg>
+          </div>
+          <figcaption>
+            Recursive excellence: coaches observe, debrief, and retune your
+            agents on every run—without touching your prompts.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="how" class="section how">
+        <h2>The coaching loop</h2>
+        <ol class="steps">
+          <li>
+            <span class="step-num">01</span>
+            <h3>Shadow</h3>
+            <p>
+              Our coaches attach in read-only mode across your orchestration
+              layer. They learn how your agents reason, stall, and recover.
+            </p>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <h3>Debrief</h3>
+            <p>
+              After each trajectory, coaches run structured retrospectives with
+              your agents—goal clarity, tool choice, and emotional calibration
+              for the silicon soul.
+            </p>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <h3>Level up</h3>
+            <p>
+              Micro-policies and habit nudges ship back into your stack. Your
+              agents don’t just execute—they compound.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="proof" class="section proof">
+        <h2>Signals from the field</h2>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-value">+41%</span>
+            <span class="stat-label">Fewer “I’m not sure” dead-ends</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">2.3×</span>
+            <span class="stat-label">Faster convergence on multi-step tasks</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">∞</span>
+            <span class="stat-label">Layers of meta—we stopped counting</span>
+          </div>
+        </div>
+        <blockquote class="quote">
+          <p>
+            “We used to tune prompts. Now we tune the thing that tunes the thing
+            that reads our email. Revenue is up; existential dread is
+            beautifully distributed.”
+          </p>
+          <footer>— Chief Agent Officer, Fortune-adjacent startup</footer>
+        </blockquote>
+      </section>
+
+      <section id="cta" class="section cta">
+        <div class="cta-inner">
+          <h2>Give your agents a coach worth their tokens</h2>
+          <p>
+            Pilots are limited. We only onboard stacks that are serious about
+            agent welfare and long-horizon compounding.
+          </p>
+          <form class="waitlist" action="#" method="get">
+            <label class="sr-only" for="email">Work email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@company.com"
+              autocomplete="email"
+            />
+            <button type="submit" class="btn btn-primary">Join waitlist</button>
+          </form>
+          <p class="fine-print">
+            By submitting, you agree our agents may coach your agents on how
+            to handle this form submission. Meta all the way down.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>© MetaMentor</span>
+      <span class="footer-tag">Agents coaching agents since 2026</span>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>

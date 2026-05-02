@@ -1,0 +1,28 @@
+resource "azurerm_key_vault" "MetaMentorKeyVault" {
+  name = "${var.app_name}-kv"
+  resource_group_name = var.resource_group_name
+  location = var.location
+  sku_name = "standard"
+  tenant_id = var.tenant_id
+}
+
+resource "azurerm_key_vault_access_policy" "sp" {
+  key_vault_id = azurerm_key_vault.MetaMentorKeyVault.id
+  tenant_id    = var.tenant_id
+  object_id    = var.sp_object_id
+
+  secret_permissions = [
+    "Get",
+    "List",
+    "Set",
+    "Delete"
+  ]
+}
+
+# Optional initial secrets
+resource "azurerm_key_vault_secret" "secrets" {
+  for_each     = var.secrets
+  name         = each.key
+  value        = each.value
+  key_vault_id = azurerm_key_vault.MetaMentorKeyVault.id
+}

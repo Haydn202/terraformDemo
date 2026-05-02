@@ -1,0 +1,35 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Variable files that may contain secrets
+secrets.auto.tfvars
+terraform.tfvars
+terraform.tfvars.json
+*.tfvars.local
+*.secret.tfvars
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE (optional local settings)
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
