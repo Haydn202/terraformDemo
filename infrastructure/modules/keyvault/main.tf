@@ -25,9 +25,13 @@ resource "azurerm_key_vault_access_policy" "github_actions" {
   tenant_id    = var.tenant_id
   object_id    = var.github_actions_sp_object_id
 
+  depends_on = [azurerm_key_vault_access_policy.sp]
+
   secret_permissions = [
     "Get",
     "List",
+    "Set",
+    "Delete",
   ]
 }
 
@@ -36,5 +40,8 @@ resource "azurerm_key_vault_secret" "swa_deployment_token" {
   value        = var.swa_deployment_token
   key_vault_id = azurerm_key_vault.MetaMentorKeyVault.id
 
-  depends_on = [azurerm_key_vault_access_policy.sp]
+  depends_on = [
+    azurerm_key_vault_access_policy.sp,
+    azurerm_key_vault_access_policy.github_actions,
+  ]
 }
